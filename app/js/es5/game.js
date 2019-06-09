@@ -10,9 +10,7 @@ var game = {
   init: function init() {
     this.ctx = document.getElementById('gamecanvas').getContext('2d');
   },
-  preload: function preload() {
-    var _this = this;
-
+  preload: function preload(callback) {
     var loaded = 0;
     var required = Object.keys(this.sprites).length;
 
@@ -23,16 +21,16 @@ var game = {
         ++loaded;
 
         if (loaded >= required) {
-          _this.run();
+          callback();
         }
       });
     }
   },
   run: function run() {
-    var _this2 = this;
+    var _this = this;
 
     window.requestAnimationFrame(function () {
-      _this2.render();
+      _this.render();
     });
   },
   render: function render() {
@@ -41,8 +39,12 @@ var game = {
     this.ctx.drawImage(this.sprites.platform, 0, 0);
   },
   start: function start() {
+    var _this2 = this;
+
     this.init();
-    this.preload();
+    this.preload(function () {
+      _this2.run();
+    });
   }
 };
 window.addEventListener('load', function () {

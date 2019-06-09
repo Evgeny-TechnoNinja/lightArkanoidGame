@@ -10,7 +10,7 @@ let game = {
     init: function() {
          this.ctx = document.getElementById('gamecanvas').getContext('2d');
     },
-    preload() {
+    preload(callback) {
         let loaded = 0;
         let required = Object.keys(this.sprites).length;
         for (let key in this.sprites) {
@@ -19,7 +19,7 @@ let game = {
             this.sprites[key].addEventListener('load', () => {
                 ++loaded;
                 if (loaded >= required) {
-                    this.run();
+                   callback();
                 }
             });
         }
@@ -36,7 +36,9 @@ let game = {
     },
     start: function() {
        this.init();
-       this.preload();
+       this.preload(() => {
+           this.run();
+       });
     }  
 };
 
