@@ -4,6 +4,9 @@ var game = {
   ctx: null,
   ball: null,
   platform: null,
+  blocks: [],
+  rows: 4,
+  cols: 8,
   sprites: {
     background: null,
     ball: null,
@@ -31,6 +34,16 @@ var game = {
       this.sprites[key].addEventListener('load', onImageLoad);
     }
   },
+  create: function create() {
+    for (var row = 0; row < this.rows; row++) {
+      for (var col = 0; col < this.cols; col++) {
+        this.blocks.push({
+          x: 64 * col + 65,
+          y: 24 * row + 35
+        });
+      }
+    }
+  },
   run: function run() {
     var _this = this;
 
@@ -42,13 +55,40 @@ var game = {
     this.ctx.drawImage(this.sprites.background, 0, 0);
     this.ctx.drawImage(this.sprites.ball, 0, 0, this.ball.width, this.ball.height, this.ball.x, this.ball.y, this.ball.width, this.ball.height);
     this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
-    this.ctx.drawImage(this.sprites.block, 0, 0);
+    this.renderBlocks();
+  },
+  renderBlocks: function renderBlocks() {
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = this.blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var block = _step.value;
+        this.ctx.drawImage(this.sprites.block, block.x, block.y);
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+          _iterator["return"]();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
   },
   start: function start() {
     var _this2 = this;
 
     this.init();
     this.preload(function () {
+      _this2.create();
+
       _this2.run();
     });
   }
