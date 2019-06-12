@@ -7,7 +7,8 @@ var game = {
   sprites: {
     background: null,
     ball: null,
-    platform: null
+    platform: null,
+    block: null
   },
   init: function init() {
     this.ctx = document.getElementById('gamecanvas').getContext('2d');
@@ -16,16 +17,18 @@ var game = {
     var loaded = 0;
     var required = Object.keys(this.sprites).length;
 
+    var onImageLoad = function onImageLoad() {
+      ++loaded;
+
+      if (loaded >= required) {
+        callback();
+      }
+    };
+
     for (var key in this.sprites) {
       this.sprites[key] = new Image();
       this.sprites[key].src = 'img/' + key + '.png';
-      this.sprites[key].addEventListener('load', function () {
-        ++loaded;
-
-        if (loaded >= required) {
-          callback();
-        }
-      });
+      this.sprites[key].addEventListener('load', onImageLoad);
     }
   },
   run: function run() {
@@ -39,6 +42,7 @@ var game = {
     this.ctx.drawImage(this.sprites.background, 0, 0);
     this.ctx.drawImage(this.sprites.ball, 0, 0, this.ball.width, this.ball.height, this.ball.x, this.ball.y, this.ball.width, this.ball.height);
     this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
+    this.ctx.drawImage(this.sprites.block, 0, 0);
   },
   start: function start() {
     var _this2 = this;
