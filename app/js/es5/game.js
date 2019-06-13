@@ -15,6 +15,21 @@ var game = {
   },
   init: function init() {
     this.ctx = document.getElementById('gamecanvas').getContext('2d');
+    this.setEvents();
+  },
+  setEvents: function setEvents() {
+    var _this = this;
+
+    window.addEventListener('keydown', function (e) {
+      if (e.keyCode === 37) {
+        _this.platform.dx = -_this.platform.velocity;
+      } else if (e.keyCode === 39) {
+        _this.platform.dx = _this.platform.velocity;
+      }
+    });
+    window.addEventListener('keyup', function (e) {
+      _this.platform.dx = 0;
+    });
   },
   preload: function preload(callback) {
     var loaded = 0;
@@ -44,11 +59,18 @@ var game = {
       }
     }
   },
+  update: function update() {
+    this.platform.move();
+  },
   run: function run() {
-    var _this = this;
+    var _this2 = this;
 
     window.requestAnimationFrame(function () {
-      _this.render();
+      _this2.update();
+
+      _this2.render();
+
+      _this2.run();
     });
   },
   render: function render() {
@@ -83,13 +105,13 @@ var game = {
     }
   },
   start: function start() {
-    var _this2 = this;
+    var _this3 = this;
 
     this.init();
     this.preload(function () {
-      _this2.create();
+      _this3.create();
 
-      _this2.run();
+      _this3.run();
     });
   }
 };
@@ -100,8 +122,15 @@ game.ball = {
   height: 20
 };
 game.platform = {
+  velocity: 6,
+  dx: 0,
   x: 280,
-  y: 300
+  y: 300,
+  move: function move() {
+    if (this.dx) {
+      this.x += this.dx;
+    }
+  }
 };
 window.addEventListener('load', function () {
   game.start();
