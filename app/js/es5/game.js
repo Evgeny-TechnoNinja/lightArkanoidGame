@@ -1,5 +1,9 @@
 'use strict';
 
+var KEYS = {
+  LEFT: 37,
+  RIGHT: 39
+};
 var game = {
   ctx: null,
   ball: null,
@@ -21,14 +25,12 @@ var game = {
     var _this = this;
 
     window.addEventListener('keydown', function (e) {
-      if (e.keyCode === 37) {
-        _this.platform.dx = -_this.platform.velocity;
-      } else if (e.keyCode === 39) {
-        _this.platform.dx = _this.platform.velocity;
+      if (e.keyCode === KEYS.LEFT || e.keyCode === KEYS.RIGHT) {
+        _this.platform.start(e.keyCode);
       }
     });
     window.addEventListener('keyup', function (e) {
-      _this.platform.dx = 0;
+      _this.platform.stop();
     });
   },
   preload: function preload(callback) {
@@ -126,9 +128,20 @@ game.platform = {
   dx: 0,
   x: 280,
   y: 300,
+  start: function start(direction) {
+    if (direction === KEYS.LEFT) {
+      this.dx = -this.velocity;
+    } else if (direction === KEYS.RIGHT) {
+      this.dx = this.velocity;
+    }
+  },
+  stop: function stop() {
+    this.dx = 0;
+  },
   move: function move() {
     if (this.dx) {
       this.x += this.dx;
+      game.ball.x += this.dx;
     }
   }
 };
