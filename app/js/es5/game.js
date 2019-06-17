@@ -2,7 +2,8 @@
 
 var KEYS = {
   LEFT: 37,
-  RIGHT: 39
+  RIGHT: 39,
+  SPACE: 32
 };
 var game = {
   ctx: null,
@@ -25,7 +26,9 @@ var game = {
     var _this = this;
 
     window.addEventListener('keydown', function (e) {
-      if (e.keyCode === KEYS.LEFT || e.keyCode === KEYS.RIGHT) {
+      if (e.keyCode === KEYS.SPACE) {
+        _this.platform.fire();
+      } else if (e.keyCode === KEYS.LEFT || e.keyCode === KEYS.RIGHT) {
         _this.platform.start(e.keyCode);
       }
     });
@@ -63,6 +66,7 @@ var game = {
   },
   update: function update() {
     this.platform.move();
+    this.ball.move();
   },
   run: function run() {
     var _this2 = this;
@@ -118,16 +122,31 @@ var game = {
   }
 };
 game.ball = {
+  dy: 0,
+  velocity: 3,
   x: 320,
   y: 280,
   width: 20,
-  height: 20
+  height: 20,
+  start: function start() {
+    this.dy = -this.velocity;
+  },
+  move: function move() {
+    if (this.dy) {
+      this.y += this.dy;
+    }
+  }
 };
 game.platform = {
   velocity: 6,
   dx: 0,
   x: 280,
   y: 300,
+  ball: game.ball,
+  fire: function fire() {
+    this.ball.start();
+    this.ball = null;
+  },
   start: function start(direction) {
     if (direction === KEYS.LEFT) {
       this.dx = -this.velocity;
@@ -141,7 +160,10 @@ game.platform = {
   move: function move() {
     if (this.dx) {
       this.x += this.dx;
-      game.ball.x += this.dx;
+
+      if (this.ball) {
+        this.ball.x += this.dx;
+      }
     }
   }
 };
