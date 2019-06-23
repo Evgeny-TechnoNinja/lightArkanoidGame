@@ -60,6 +60,8 @@ var game = {
     for (var row = 0; row < this.rows; row++) {
       for (var col = 0; col < this.cols; col++) {
         this.blocks.push({
+          width: 60,
+          height: 20,
           x: 64 * col + 65,
           y: 24 * row + 35
         });
@@ -69,6 +71,32 @@ var game = {
   update: function update() {
     this.platform.move();
     this.ball.move();
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = this.blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var block = _step.value;
+
+        if (this.ball.collide(block)) {
+          this.ball.bumpBlock(block);
+        }
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+          _iterator["return"]();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
   },
   run: function run() {
     var _this2 = this;
@@ -89,26 +117,26 @@ var game = {
     this.renderBlocks();
   },
   renderBlocks: function renderBlocks() {
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
 
     try {
-      for (var _iterator = this.blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var block = _step.value;
+      for (var _iterator2 = this.blocks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var block = _step2.value;
         this.ctx.drawImage(this.sprites.block, block.x, block.y);
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-          _iterator["return"]();
+        if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+          _iterator2["return"]();
         }
       } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
+        if (_didIteratorError2) {
+          throw _iteratorError2;
         }
       }
     }
@@ -147,6 +175,19 @@ game.ball = {
     if (this.dx) {
       this.x += this.dx;
     }
+  },
+  collide: function collide(element) {
+    var x = this.x + this.dx;
+    var y = this.y + this.dy;
+
+    if (x + this.width > element.x && x < element.x + element.width && y + this.height > element.y && y < element.y + element.height) {
+      return true;
+    }
+
+    return false;
+  },
+  bumpBlock: function bumpBlock() {
+    this.dy *= -1;
   }
 };
 game.platform = {
