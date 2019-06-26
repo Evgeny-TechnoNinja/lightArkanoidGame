@@ -204,9 +204,11 @@ game.ball = {
     block.active = false;
   },
   bumpPlatform: function bumpPlatform(platform) {
-    this.dy *= -1;
-    var touchX = this.x + this.width / 2;
-    this.dx = this.velocity * platform.getTouchOffset(touchX);
+    if (this.dy > 0) {
+      this.dy = -this.velocity;
+      var touchX = this.x + this.width / 2;
+      this.dx = this.velocity * platform.getTouchOffset(touchX);
+    }
   }
 };
 game.platform = {
