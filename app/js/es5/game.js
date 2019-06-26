@@ -71,6 +71,10 @@ var game = {
   update: function update() {
     this.platform.move();
     this.ball.move();
+    this.collideBlocks();
+    this.collidePlatform();
+  },
+  collideBlocks: function collideBlocks() {
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
     var _iteratorError = undefined;
@@ -96,6 +100,11 @@ var game = {
           throw _iteratorError;
         }
       }
+    }
+  },
+  collidePlatform: function collidePlatform() {
+    if (this.ball.collide(this.platform)) {
+      this.ball.bumpPlatform(this.platform);
     }
   },
   run: function run() {
@@ -188,6 +197,11 @@ game.ball = {
   },
   bumpBlock: function bumpBlock() {
     this.dy *= -1;
+  },
+  bumpPlatform: function bumpPlatform(platform) {
+    this.dy *= -1;
+    var touchX = this.x + this.width / 2;
+    this.dx = this.velocity * platform.getTouchOffset(touchX);
   }
 };
 game.platform = {
@@ -195,6 +209,8 @@ game.platform = {
   dx: 0,
   x: 280,
   y: 300,
+  width: 100,
+  height: 14,
   ball: game.ball,
   fire: function fire() {
     this.ball.start();
@@ -218,6 +234,12 @@ game.platform = {
         this.ball.x += this.dx;
       }
     }
+  },
+  getTouchOffset: function getTouchOffset(x) {
+    var diff = this.x + this.width - x;
+    var offset = this.width - diff;
+    var result = 2 * offset / this.width;
+    return result - 1;
   }
 };
 window.addEventListener('load', function () {
