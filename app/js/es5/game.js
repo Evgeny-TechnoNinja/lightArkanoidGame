@@ -70,10 +70,11 @@ var game = {
     }
   },
   update: function update() {
-    this.platform.move();
-    this.ball.move();
     this.collideBlocks();
     this.collidePlatform();
+    this.ball.collideWorldBounds();
+    this.platform.move();
+    this.ball.move();
   },
   collideBlocks: function collideBlocks() {
     var _iteratorNormalCompletion = true;
@@ -198,6 +199,31 @@ game.ball = {
     }
 
     return false;
+  },
+  collideWorldBounds: function collideWorldBounds() {
+    var x = this.x + this.dx;
+    var y = this.y + this.dy;
+    var ballLeft = x;
+    var ballRight = ballLeft + this.width;
+    var ballTop = y;
+    var ballBottom = ballTop + this.height;
+    var worldLeft = 0;
+    var worldRight = game.width;
+    var worldTop = 0;
+    var worldBottom = game.height;
+
+    if (ballLeft < worldLeft) {
+      this.x = 0;
+      this.dx = this.velocity;
+    } else if (ballRight > worldRight) {
+      this.x = worldRight - this.width;
+      this.dx = -this.velocity;
+    } else if (ballTop < worldTop) {
+      this.dy = this.velocity;
+      this.y = 0;
+    } else if (ballBottom > worldBottom) {
+      console.log('GAME OVER');
+    }
   },
   bumpBlock: function bumpBlock(block) {
     this.dy *= -1;
