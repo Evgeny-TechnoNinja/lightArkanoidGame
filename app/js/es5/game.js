@@ -60,6 +60,7 @@ var game = {
     for (var row = 0; row < this.rows; row++) {
       for (var col = 0; col < this.cols; col++) {
         this.blocks.push({
+          active: true,
           width: 60,
           height: 20,
           x: 64 * col + 65,
@@ -83,7 +84,7 @@ var game = {
       for (var _iterator = this.blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         var block = _step.value;
 
-        if (this.ball.collide(block)) {
+        if (block.active && this.ball.collide(block)) {
           this.ball.bumpBlock(block);
         }
       }
@@ -133,7 +134,10 @@ var game = {
     try {
       for (var _iterator2 = this.blocks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
         var block = _step2.value;
-        this.ctx.drawImage(this.sprites.block, block.x, block.y);
+
+        if (block.active) {
+          this.ctx.drawImage(this.sprites.block, block.x, block.y);
+        }
       }
     } catch (err) {
       _didIteratorError2 = true;
@@ -195,8 +199,9 @@ game.ball = {
 
     return false;
   },
-  bumpBlock: function bumpBlock() {
+  bumpBlock: function bumpBlock(block) {
     this.dy *= -1;
+    block.active = false;
   },
   bumpPlatform: function bumpPlatform(platform) {
     this.dy *= -1;
