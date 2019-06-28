@@ -6,6 +6,7 @@ var KEYS = {
   SPACE: 32
 };
 var game = {
+  running: true,
   ctx: null,
   ball: null,
   platform: null,
@@ -113,13 +114,15 @@ var game = {
   run: function run() {
     var _this2 = this;
 
-    window.requestAnimationFrame(function () {
-      _this2.update();
+    if (this.running) {
+      window.requestAnimationFrame(function () {
+        _this2.update();
 
-      _this2.render();
+        _this2.render();
 
-      _this2.run();
-    });
+        _this2.run();
+      });
+    }
   },
   render: function render() {
     this.ctx.clearRect(0, 0, this.width, this.height);
@@ -223,7 +226,9 @@ game.ball = {
       this.dy = this.velocity;
       this.y = 0;
     } else if (ballBottom > worldBottom) {
-      console.log('GAME OVER');
+      game.running = false;
+      alert('GAME OVER');
+      window.location.reload();
     }
   },
   bumpBlock: function bumpBlock(block) {
