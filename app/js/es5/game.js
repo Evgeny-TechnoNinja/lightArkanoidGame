@@ -231,6 +231,10 @@ game.ball = {
     block.active = false;
   },
   bumpPlatform: function bumpPlatform(platform) {
+    if (platform.dx) {
+      this.x += platform.dx;
+    }
+
     if (this.dy > 0) {
       this.dy = -this.velocity;
       var touchX = this.x + this.width / 2;
