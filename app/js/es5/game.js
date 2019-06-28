@@ -73,6 +73,7 @@ var game = {
     this.collideBlocks();
     this.collidePlatform();
     this.ball.collideWorldBounds();
+    this.platform.collideWorldBounds();
     this.platform.move();
     this.ball.move();
   },
@@ -273,6 +274,17 @@ game.platform = {
     var offset = this.width - diff;
     var result = 2 * offset / this.width;
     return result - 1;
+  },
+  collideWorldBounds: function collideWorldBounds() {
+    var x = this.x + this.dx;
+    var platformLeft = x;
+    var platformRight = platformLeft + this.width;
+    var worldLeft = 0;
+    var worldRight = game.width;
+
+    if (platformLeft < worldLeft || platformRight > worldRight) {
+      this.dx = 0;
+    }
   }
 };
 window.addEventListener('load', function () {
