@@ -159,7 +159,7 @@ var game = {
   render: function render() {
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.ctx.drawImage(this.sprites.background, 0, 0);
-    this.ctx.drawImage(this.sprites.ball, 0, 0, this.ball.width, this.ball.height, this.ball.x, this.ball.y, this.ball.width, this.ball.height);
+    this.ctx.drawImage(this.sprites.ball, this.ball.frame * this.ball.width, 0, this.ball.width, this.ball.height, this.ball.x, this.ball.y, this.ball.width, this.ball.height);
     this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
     this.renderBlocks();
     this.ctx.fillText('Score:' + this.score, 15, 20);
@@ -214,6 +214,7 @@ var game = {
 game.ball = {
   dx: 0,
   dy: 0,
+  frame: 0,
   velocity: 3,
   x: 320,
   y: 280,
@@ -222,6 +223,18 @@ game.ball = {
   start: function start() {
     this.dy = -this.velocity;
     this.dx = game.random(-this.velocity, this.velocity);
+    this.animate();
+  },
+  animate: function animate() {
+    var _this4 = this;
+
+    setInterval(function () {
+      ++_this4.frame;
+
+      if (_this4.frame > 3) {
+        _this4.frame = 0;
+      }
+    }, 100);
   },
   move: function move() {
     if (this.dy) {
